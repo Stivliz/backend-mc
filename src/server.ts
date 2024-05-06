@@ -3,7 +3,7 @@ import app from './app'
 import dbConnect from './database';
 const PORT = process.env.PORT || 3001;
 
-dbConnect().then(() => console.log('server conected'))
+dbConnect().then(() => console.log('Database conected...'))
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}...`)
