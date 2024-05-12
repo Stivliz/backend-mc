@@ -1,8 +1,13 @@
 import { Request, Response } from "express"
-import mongoose from "mongoose"
 import handleHttp from "../utils/error.handler"
-const { insertSong } = require('../services/song')
+import { insertSong, findSongs } from '../services/song.service'
+import { normalizeStringToLowerCase } from "../utils/helpers/normalizeToLowerCase"
 
+
+
+interface songNameType {
+    songName: string;
+}
 
 const getSongs = async (req:Request, res:Response) => {
     try{
@@ -15,11 +20,18 @@ const getSongs = async (req:Request, res:Response) => {
 
 
 const getSong = async (req:Request, res:Response) => {
-    try{
 
-    }catch(error){
-        handleHttp(res, 'ERROR_GET_SONG')
-    }
+    // try{
+
+    //     const { songName } = req.query;
+    //     const lowerCaseSongName = normalizeStringToLowerCase({str:songName});
+    //     const responseSongName = await findSongs(lowerCaseSongName)
+    //     responseSongName 
+    //     ? res.status(200).json(responseSongName)
+    //     : res.status(404).send('The requested resource could not be found on the server.')
+    // }catch(error){
+    //     handleHttp(res, 'ERROR_GET_SONG')
+    // }
 }
 
 const postSong = async ({ body }:Request, res:Response) => {
