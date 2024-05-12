@@ -2,12 +2,9 @@ import { Request, Response } from "express"
 import handleHttp from "../utils/error.handler"
 import { insertSong, findSongs } from '../services/song.service'
 import { normalizeStringToLowerCase } from "../utils/helpers/normalizeToLowerCase"
+import ISong from "../interfaces/interfaces"
 
 
-
-interface songNameType {
-    songName: string;
-}
 
 const getSongs = async (req:Request, res:Response) => {
     try{
@@ -21,17 +18,17 @@ const getSongs = async (req:Request, res:Response) => {
 
 const getSong = async (req:Request, res:Response) => {
 
-    // try{
+    try{
 
-    //     const { songName } = req.query;
-    //     const lowerCaseSongName = normalizeStringToLowerCase({str:songName});
-    //     const responseSongName = await findSongs(lowerCaseSongName)
-    //     responseSongName 
-    //     ? res.status(200).json(responseSongName)
-    //     : res.status(404).send('The requested resource could not be found on the server.')
-    // }catch(error){
-    //     handleHttp(res, 'ERROR_GET_SONG')
-    // }
+        const  songName  = req.query.songName as string;
+        const lowerCaseSongName:string = normalizeStringToLowerCase(songName);
+        const responseSongName = await findSongs(lowerCaseSongName)
+        responseSongName 
+        ? res.status(200).json(responseSongName)
+        : res.status(404).send('The requested resource could not be found on the server.')
+    }catch(error){
+        handleHttp(res, 'ERROR_GET_SONG')
+    }
 }
 
 const postSong = async ({ body }:Request, res:Response) => {

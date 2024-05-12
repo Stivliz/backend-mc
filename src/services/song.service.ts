@@ -7,7 +7,7 @@ export const insertSong = async (song:ISong) => {
     return responseInsert
 }
 
-export const  findSongs = async (name:ISong) => {
-    const searchResponse = await SongModel.find({ name: createCaseInsensitiveRegex(name.name) })
-    return searchResponse;
+export const  findSongs = async (name:string) => {
+    const searchResponse = await SongModel.find({ name: createCaseInsensitiveRegex(name) });
+    return searchResponse
 }
