@@ -17,16 +17,17 @@ const getSongs = async (req:Request, res:Response) => {
 
 
 const getSong = async (req:Request, res:Response) => {
-
-    try{
+    try {
 
         const  songName  = req.query.songName as string;
         const lowerCaseSongName:string = normalizeStringToLowerCase(songName);
         const responseSongName = await findSongs(lowerCaseSongName)
+
         responseSongName 
         ? res.status(200).json(responseSongName)
         : res.status(404).send('The requested resource could not be found on the server.')
-    }catch(error){
+    
+    }  catch(error) {
         handleHttp(res, 'ERROR_GET_SONG')
     }
 }
