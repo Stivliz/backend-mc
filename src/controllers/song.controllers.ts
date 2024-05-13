@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
+import mongoose from "mongoose";
 import handleHttp from "../utils/error.handler"
-import { insertSong, findSongs } from '../services/song.service'
+import { insertSong, findSongs, findSongById } from '../services/song.service'
 import { normalizeStringToLowerCase } from "../utils/helpers/normalizeToLowerCase"
 import ISong from "../interfaces/interfaces"
 
@@ -9,8 +10,12 @@ import ISong from "../interfaces/interfaces"
 const getSongById = async (req:Request, res:Response) => {
 
     try{
-      const { id } =req.params;
-      const responseSongById= await findSongs(id)
+        const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) {
+            throw new Error('Invalid ID');
+        }
+
+      const responseSongById= await findSongById(id)
 
       responseSongById
       ? res.status(200).json(responseSongById)
@@ -29,12 +34,12 @@ const getSong = async (req:Request, res:Response) => {
         const lowerCaseSongName:string = normalizeStringToLowerCase(songName);
         const responseSongName = await findSongs(lowerCaseSongName)
         
-        responseSongName 
-        ? res.status(200).json(responseSongName)
-        : res.status(404).send('The requested resource could not be found on the server.')
+        !responseSongName.length 
+        ? res.status(404).send('The requested resource could not be found on the server.')
+        : res.status(200).json({'message': responseSongName})
         }else{
             const responseAllSongs = await findSongs('')
-            res.status(200).json(responseAllSongs)
+            res.status(200).json({'message': responseAllSongs})
         }
     }  catch(error) {
         handleHttp(res, 'ERROR_GET_SONG')
