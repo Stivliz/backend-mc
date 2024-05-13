@@ -6,27 +6,30 @@ import ISong from "../interfaces/interfaces"
 
 
 
-const getSongs = async (req:Request, res:Response) => {
-    try{
+const getSongById = async (req:Request, res:Response) => {
+//     try{
       
 
-    }catch(error){
-        handleHttp(res, 'ERROR_GET_SONG')
-    }
+//     }catch(error){
+//         handleHttp(res, 'ERROR_GET_SONG')
+//     }
 }
 
 
 const getSong = async (req:Request, res:Response) => {
     try {
-
+        if(req.query.songName){
         const  songName  = req.query.songName as string;
         const lowerCaseSongName:string = normalizeStringToLowerCase(songName);
         const responseSongName = await findSongs(lowerCaseSongName)
-
+        
         responseSongName 
         ? res.status(200).json(responseSongName)
         : res.status(404).send('The requested resource could not be found on the server.')
-    
+        }else{
+            const responseAllSongs = await findSongs('')
+            res.status(200).json(responseAllSongs)
+        }
     }  catch(error) {
         handleHttp(res, 'ERROR_GET_SONG')
     }
@@ -59,7 +62,7 @@ const deleteSong = async (req:Request, res:Response) => {
 
 
 export default {
-    getSongs,
+    getSongById,
     getSong,
     postSong,
     updateSong,
