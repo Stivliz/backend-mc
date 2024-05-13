@@ -7,12 +7,18 @@ import ISong from "../interfaces/interfaces"
 
 
 const getSongById = async (req:Request, res:Response) => {
-//     try{
-      
 
-//     }catch(error){
-//         handleHttp(res, 'ERROR_GET_SONG')
-//     }
+    try{
+      const { id } =req.params;
+      const responseSongById= await findSongs(id)
+
+      responseSongById
+      ? res.status(200).json(responseSongById)
+      : res.status(404).send('The requested resource could not be found on the server.')
+
+    } catch(error) {
+        handleHttp(res, 'ERROR_GET_SONG')
+    }
 }
 
 
