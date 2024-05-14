@@ -1,16 +1,16 @@
 import { Request, Response } from "express"
 import mongoose from "mongoose";
 import handleHttp from "../utils/error.handler"
-import { insertSong, findSongs, getSong, updateSong } from '../services/song.service'
+import { insertSong, findSongs, getSong, updateSong, deleteSong } from '../services/song.service'
 import { normalizeStringToLowerCase } from "../utils/helpers/normalizeToLowerCase"
 import ISong from "../interfaces/interfaces"
 
 
 
-const getItemById = async ({params}:Request, res:Response) => {
+const getItemById = async ({ params} :Request, res:Response) => {
     try{
-        const {id } = params;
-        
+        const { id } = params;
+         
         const responseSongById= await getSong(id)
 
         responseSongById
@@ -33,7 +33,8 @@ const getItems = async (req:Request, res:Response) => {
         !responseSongName == null
         ? res.status(404).send('The requested resource could not be found on the server.')
         : res.status(200).json({'message': responseSongName})
-        }else{
+
+        } else {
             const responseAllSongs = await findSongs('')
             res.status(200).json({'message': responseAllSongs})
         }
@@ -53,7 +54,7 @@ const postItem= async ({ body }:Request, res:Response) => {
 
 const updateItem = async ({params, body}: Request, res:Response) => {
     try{
-        const {id} = params;
+        const { id } = params;
         
         const responseUpdatSong = await updateSong(id, body) 
         
@@ -61,15 +62,22 @@ const updateItem = async ({params, body}: Request, res:Response) => {
         ? res.status(200).json(responseUpdatSong)
         : res.status(404).send('the request is not found on the server and has not been updated.')
 
-    }catch(error){
+    } catch(error) {
         handleHttp(res, 'ERROR_UPDATE_SONG')
     }
 }
 
-const deleteItem = async (req:Request, res:Response) => {
+const deleteItem = async ({params}:Request, res:Response) => {
     try{
+        const { id } = params;
 
-    }catch(error){
+        const responseDeletedSong = await deleteSong(id)
+
+        responseDeletedSong
+        ? res.status(200).send('the item been deleted.')
+        : res.status(404).send('the request is not found on the server and has not been deleted.')
+
+    } catch(error) {
         handleHttp(res, 'ERROR_DELETE_SONG')
     }
 }
