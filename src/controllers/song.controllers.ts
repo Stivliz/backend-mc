@@ -1,25 +1,21 @@
 import { Request, Response } from "express"
 import mongoose from "mongoose";
 import handleHttp from "../utils/error.handler"
-import { insertSong, findSongs, findSongById } from '../services/song.service'
+import { insertSong, findSongs, getSong, updateSong } from '../services/song.service'
 import { normalizeStringToLowerCase } from "../utils/helpers/normalizeToLowerCase"
 import ISong from "../interfaces/interfaces"
 
 
 
-const getSongById = async (req:Request, res:Response) => {
-
+const getItemById = async ({params}:Request, res:Response) => {
     try{
-        const id = parseInt(req.params.id, 10);
-        if (isNaN(id)) {
-            throw new Error('Invalid ID');
-        }
+        const {id } = params;
+        
+        const responseSongById= await getSong(id)
 
-      const responseSongById= await findSongById(id)
-
-      responseSongById
-      ? res.status(200).json(responseSongById)
-      : res.status(404).send('The requested resource could not be found on the server.')
+        responseSongById
+        ? res.status(200).json(responseSongById)
+        : res.status(404).send('The requested resource could not be found on the server.')
 
     } catch(error) {
         handleHttp(res, 'ERROR_GET_SONG')
@@ -27,14 +23,14 @@ const getSongById = async (req:Request, res:Response) => {
 }
 
 
-const getSong = async (req:Request, res:Response) => {
+const getItems = async (req:Request, res:Response) => {
     try {
         if(req.query.songName){
         const  songName  = req.query.songName as string;
         const lowerCaseSongName:string = normalizeStringToLowerCase(songName);
         const responseSongName = await findSongs(lowerCaseSongName)
         
-        !responseSongName.length 
+        !responseSongName == null
         ? res.status(404).send('The requested resource could not be found on the server.')
         : res.status(200).json({'message': responseSongName})
         }else{
@@ -46,7 +42,7 @@ const getSong = async (req:Request, res:Response) => {
     }
 }
 
-const postSong = async ({ body }:Request, res:Response) => {
+const postItem= async ({ body }:Request, res:Response) => {
     try {
         const responseSong = await insertSong(body);
         res.send(responseSong)
@@ -55,15 +51,22 @@ const postSong = async ({ body }:Request, res:Response) => {
     }
 }
 
-const updateSong = async (req:Request, res:Response) => {
+const updateItem = async ({params, body}: Request, res:Response) => {
     try{
+        const {id} = params;
+        
+        const responseUpdatSong = await updateSong(id, body) 
+        
+        responseUpdatSong
+        ? res.status(200).json(responseUpdatSong)
+        : res.status(404).send('the request is not found on the server and has not been updated.')
 
     }catch(error){
         handleHttp(res, 'ERROR_UPDATE_SONG')
     }
 }
 
-const deleteSong = async (req:Request, res:Response) => {
+const deleteItem = async (req:Request, res:Response) => {
     try{
 
     }catch(error){
@@ -73,9 +76,9 @@ const deleteSong = async (req:Request, res:Response) => {
 
 
 export default {
-    getSongById,
-    getSong,
-    postSong,
-    updateSong,
-    deleteSong
+    getItemById,
+    getItems,
+    postItem,
+    updateItem,
+    deleteItem
 }

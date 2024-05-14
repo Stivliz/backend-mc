@@ -9,9 +9,9 @@ export const insertSong = async (song:ISong) => {
 
 
 
-export const findSongById = async (id: string) => {
+export const getSong = async (id: string) => {
 
-    const searchResponseId = await SongModel.findById({_id: id});
+    const searchResponseId = await SongModel.findOne({_id: id});
     return searchResponseId;
  
 }
@@ -27,4 +27,16 @@ export const  findSongs = async (name:string) => {
     const searchResponseName = await SongModel.findOne({ name: createCaseInsensitiveRegex(name) });
     return searchResponseName
        
+}
+
+
+
+export const updateSong = async (id: string, body: ISong) => {
+
+    const searchSongAndUpdate = await SongModel.findOneAndUpdate({_id: id}, body, {new: true})
+    return searchSongAndUpdate;
+}
+
+export const deleteSong = async () => {
+
 }
