@@ -13,12 +13,14 @@ const getItemById = async ({ params} :Request, res:Response) => {
          
         const responseSongById= await getSong(id)
 
-        responseSongById
-        ? res.status(200).json(responseSongById)
-        : res.status(404).send('The requested resource could not be found on the server.')
+        if (responseSongById) {
+            res.status(200).json(responseSongById);
+        } else {
+            res.status(404).send('The requested resource could not be found on the server.');
+        }
 
-    } catch(error) {
-        handleHttp(res, 'ERROR_GET_SONG')
+    } catch(error: any) {
+        handleHttp(res, 'ERROR_GET_SONG:', error)
     }
 }
 
@@ -38,8 +40,8 @@ const getItems = async (req:Request, res:Response) => {
             const responseAllSongs = await findSongs('')
             res.status(200).json({'message': responseAllSongs})
         }
-    }  catch(error) {
-        handleHttp(res, 'ERROR_GET_SONG')
+    }  catch(error: any) {
+        handleHttp(res, 'ERROR_GET_SONG', error)
     }
 }
 
@@ -47,7 +49,7 @@ const postItem= async ({ body }:Request, res:Response) => {
     try {
         const responseSong = await insertSong(body);
         res.send(responseSong)
-    } catch(error) {
+    } catch(error: any) {
         handleHttp(res, 'ERROR_POST_SONG', error)
     }
 }

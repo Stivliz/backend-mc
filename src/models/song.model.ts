@@ -14,7 +14,8 @@ const songSchema = new Schema <ISong>({
         required: true
     },
     album: {
-        type:  mongoose.Schema.Types.ObjectId, ref: 'Album',
+        type:  mongoose.Schema.Types.ObjectId, 
+        ref: 'Albums',
     },
     image: {
         type: String,
@@ -30,6 +31,6 @@ const songSchema = new Schema <ISong>({
     }
 })
 
-const SongModel = model('Song', songSchema);
+const SongModel = model('Songs', songSchema);
 
 export default SongModel;
