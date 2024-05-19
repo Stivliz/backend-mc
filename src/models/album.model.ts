@@ -6,6 +6,7 @@ const albumSchema = new Schema <IAlbum> (
     {
         name: {
             type: String,
+            unique: true,
             required: true
         },
         artist: {
