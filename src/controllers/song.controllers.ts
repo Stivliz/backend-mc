@@ -1,9 +1,8 @@
 import { Request, Response } from "express"
-import mongoose from "mongoose";
 import handleHttp from "../utils/error.handler"
 import { insertSong, findSongs, getSong, updateSong, deleteSong } from '../services/song.service'
 import { normalizeStringToLowerCase } from "../utils/helpers/normalizeToLowerCase"
-import ISong from "../interfaces/interfaces"
+
 
 
 
