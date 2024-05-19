@@ -12,34 +12,10 @@ const albumSchema = new Schema <IAlbum> (
             type: String,
             required: true
         },
-        songs:{ 
-            type: [
-                {
-                id: { type: mongoose.Schema.Types.ObjectId, },
-                name: {
-                    type: String,
-                    required: true
-                },
-                artist: {
-                    type: String,
-                    required: true
-                },
-                image: {
-                    type: String,
-                    required:true
-                },
-                genre: {
-                    type: String,
-                    required: true
-                },
-                year: {
-                    type: Number,
-                    required: true
-                },
-                ref: 'Songs', 
-                required: true 
-            }],
-        },
+        songs: [ { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'Songs' 
+        }],
         image: {
             type: String,
             required:true
