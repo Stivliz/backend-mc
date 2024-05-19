@@ -6,7 +6,11 @@ export const insertAlbum = () => {
 
 }
 
-export const findAlbum = () => {
+export const findAlbumId = () => {
+
+}
+
+export const findAlbums = () => {
 
 }
 

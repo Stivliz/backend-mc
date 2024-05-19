@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import handleHttp from "../utils/error.handler"
-import { insertSong, findSongs, getSong, updateSong, deleteSong } from '../services/song.service'
+import { insertSong, findSongs, findSongId, updateSong, deleteSong } from '../services/song.service'
 import { normalizeStringToLowerCase } from "../utils/helpers/normalizeToLowerCase"
 
 
@@ -10,7 +10,7 @@ const getItemById = async ({ params} :Request, res:Response) => {
     try{
         const { id } = params;
          
-        const responseSongById= await getSong(id)
+        const responseSongById= await findSongId(id)
 
         if (responseSongById) {
             res.status(200).json(responseSongById);

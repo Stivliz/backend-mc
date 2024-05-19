@@ -8,7 +8,7 @@ export const insertSong = async ( song:ISong ) => {
 }
 
 
-export const getSong = async ( id: string ) => {
+export const findSongId = async ( id: string ) => {
 
     const searchResponseId = await SongModel.findOne({_id: id});
     return searchResponseId;
