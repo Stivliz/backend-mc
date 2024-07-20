@@ -1,11 +1,24 @@
 import 'dotenv/config'
-import { connect } from 'mongoose'
+import mongoose from "mongoose"
 
+const DB = process.env.DB_URI || ""
 
-async function dbConnect(): Promise<void> {
-    const DB_URI = <string>process.env.DB_URI;
-    await connect(DB_URI)
+// const DB_DEP = process.env.DB_DEPLOY
+
+const db = () => {
+    const connect = () => {
+        mongoose.connect(DB, {
+            // useNewUrlParser: true,
+            // useUnifiedTopology: true
+          })
+            .then(() => {
+              console.log('Connection success');
+            })
+            .catch(error => {
+              console.error('Connection fail', error);
+            });
+    }
+    connect();
 }
 
-
-export default dbConnect;
+export default db;
