@@ -33,7 +33,13 @@ router.post('/', upload.single('logoBand'), async (req: MulterRequest, res: Resp
 
       // Subir imagen a Cloudinary
       const result = await cloudinary.uploader.upload(file.path, {
-        folder: 'band_logo'
+        folder: 'band_logo',
+        transformation: [
+          { width: 200, height: 200, crop: "fill" },  // Redimensionar a 200x200 píxeles
+          { quality: "auto:good" },                   // Ajustar la calidad automáticamente
+        ],
+        resource_type: "image",
+        bytes_limit: 25 * 1024 * 1024,
       });
     
       // Crear el usuario con la URL de la imagen subida
