@@ -14,7 +14,7 @@
                     _id: e._id,
                     bandname: e.bandname,
                     genre: e.genre,
-                    themes: e.themes,
+                    // themes: e.themes,
                     logoBand: e.logoBand,
                     formedDate: e.formedDate,
                     socialLinks: e.socialLinks

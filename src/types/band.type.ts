@@ -6,7 +6,7 @@ export interface IBand {
     password: string;
     genre: string[];
     country?: string;
-    themes: string;
+    // themes?: string;
     logoBand?: string;
   //   status?: object[];
     formedDate?: Date;
