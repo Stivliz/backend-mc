@@ -22,7 +22,7 @@ interface MulterRequest extends Request {
 router.post('/', upload.single('logoBand'), async (req: MulterRequest, res: Response) => {
     try {
 
-      const { bandname, password, formedDate, themes } = req.body;
+      const { bandname, password, formedDate, genre } = req.body;
       const file = req.file;
         
       let hash = await bcrypt.hash(password, 10);
@@ -41,7 +41,7 @@ router.post('/', upload.single('logoBand'), async (req: MulterRequest, res: Resp
       bandname,
       password: hash,
       formedDate,
-      themes,
+      genre,
       logoBand: result.secure_url // Guarda la URL segura de la imagen
     });
 
