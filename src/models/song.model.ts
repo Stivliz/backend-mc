@@ -7,7 +7,8 @@ const songSchema = new Schema <ISong>(
     {
         name: {
             type: String,
-            required: true
+            required: true,
+            index: true // Añadimos el índice aquí
         },
         artist: {
             type: String,
