@@ -12,7 +12,7 @@ const songSchema = new Schema <ISong>(
         },
         artist: {
             type: String,
-            required: true
+            // // required: true
         },
         album: {
             type:  mongoose.Schema.Types.ObjectId, 
@@ -20,15 +20,15 @@ const songSchema = new Schema <ISong>(
         },
         image: {
             type: String,
-            required:true
+            // required:true
         },
         genre: {
             type: String,
-            required: true
+            // required: true
         },
         year: {
             type: Number,
-            required: true
+            // required: true
         }
     }, 
     {

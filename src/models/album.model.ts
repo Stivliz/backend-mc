@@ -19,7 +19,7 @@ const albumSchema = new Schema <IAlbum> (
         }],
         image: {
             type: String,
-            required:true
+            // required:true
         },
         genre: {
             type: String,

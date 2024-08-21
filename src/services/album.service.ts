@@ -6,35 +6,28 @@ import mongoose from 'mongoose';
 import ISong from "../interfaces/interfaces";
 import { createCaseInsensitiveRegex } from "../utils/helpers/createCaseInsensitiveRegex";
 
-
 export const insertAlbum = async (albumData: IAlbum, songData: ISong[]) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-        // Crear un array para almacenar los IDs de las canciones
         const songIds: mongoose.Types.ObjectId[] = [];
 
         for (const song of songData) {
-            // Normalizar el nombre de la canción
             const normalizedSongName = normalizeStringToLowerCase(song.name);
-
-            // Buscar canciones existentes por nombre (normalizado)
             const existingSong = await SongModel.findOne({ name: normalizedSongName }).session(session);
 
             if (existingSong) {
-                // Si la canción existe, agregar su ID al álbum
                 songIds.push(existingSong._id);
             } else {
-                // Si la canción no existe, crearla y luego agregar su ID al álbum
                 const createdSong = await SongModel.create([song], { session });
                 songIds.push(createdSong[0]._id);
             }
         }
 
-        // Crear el álbum con las canciones
+        // Crea el álbum con el modelo correcto, asegurándote de que se usen los datos del álbum
         const album = new AlbumModel({
             ...albumData,
-            songs: songIds,
+            songs: songIds, // Asigna las canciones creadas al álbum
         });
 
         const savedAlbum = await album.save({ session });
@@ -45,25 +38,38 @@ export const insertAlbum = async (albumData: IAlbum, songData: ISong[]) => {
 
         return savedAlbum;
     } catch (error) {
-        // Rollback de la transacción en caso de error
         await session.abortTransaction();
         session.endSession();
         throw error;
     }
 };
 
-export const findAlbumId = () => {
 
+export const findAlbumId = async (id: string) => {
+
+    const searchResponseId = await AlbumModel.findOne({ _id: id });
+    return searchResponseId
 }
 
-export const findAlbums = () => {
+export const findAlbums = async (name: string) => {
 
+    if(!name) {
+        const searchResponceAll = await AlbumModel.find({})
+        return searchResponceAll;
+    }
+
+    const searchResponseName = await AlbumModel.findOne({ name: createCaseInsensitiveRegex(name) });
+    return searchResponseName;
 }
 
-export const updateAlbum = () => {
+export const updateAlbum = async (id: string, body: IAlbum) => {
 
+    const searchAlbumAndUpdate = await AlbumModel.findByIdAndUpdate({_id: id}, body, {new: true})
+    return searchAlbumAndUpdate
 }
 
-export const deleteAlbum = () => {
+export const deleteAlbum = async ( id: string ) => {
 
+    const searchAlbumAndDelete = await AlbumModel.findByIdAndDelete({_id: id})
+    return searchAlbumAndDelete
 }
