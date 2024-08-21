@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-const {Schema, model } = mongoose;
+const { Schema, model } = mongoose;
 import IAlbum from '../interfaces/interfaces'
 
 const albumSchema = new Schema <IAlbum> (
@@ -19,7 +19,7 @@ const albumSchema = new Schema <IAlbum> (
         }],
         image: {
             type: String,
-            required:true
+            // required:true
         },
         genre: {
             type: String,

@@ -2,7 +2,7 @@ import express  from 'express'
 import cors from 'cors'
 import morgan from  'morgan'
 import songs from './routes/song.route'
-
+import albums from './routes/album.route'
 import authRout from './routes/auth.route'
 import authRoutPost from './routes/authPost.route'
 import bandRoute from './routes/band.route'
@@ -16,6 +16,7 @@ app.use(cors())
 
 //Routes
 app.use('/', songs)
+app.use('/', albums)
 
 //Routes
 app.use('/api/v1/bands', bandRoute);

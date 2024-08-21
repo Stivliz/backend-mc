@@ -1,13 +1,13 @@
 import { Router } from'express';
-import songControllers from '../controllers/song.controllers'
+import albumControllers from '../controllers/album.controlers'
 
 const router = Router();
  
-router.get('/albums', songControllers.getItems)
-      .get('/album/:id', songControllers.getItemById)
-      .post('/album', songControllers.postItem)
-      .put('/album/:id', songControllers.updateItem)
-      .delete('/album/:id', songControllers.deleteItem)
+router.get('/albums', albumControllers.getItems)
+      .get('/album/:id', albumControllers.getItemById)
+      .post('/album', albumControllers.postItem)
+      .put('/album/:id', albumControllers.updateItem)
+      .delete('/album/:id', albumControllers.deleteItem)
 
 
 export default router;

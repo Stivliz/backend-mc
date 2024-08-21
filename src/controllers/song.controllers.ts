@@ -4,9 +4,7 @@ import { insertSong, findSongs, findSongId, updateSong, deleteSong } from '../se
 import { normalizeStringToLowerCase } from "../utils/helpers/normalizeToLowerCase"
 
 
-
-
-const getItemById = async ({ params} :Request, res:Response) => {
+const getItemById = async ({ params }: Request, res: Response) => {
     try{
         const { id } = params;
          
@@ -14,24 +12,24 @@ const getItemById = async ({ params} :Request, res:Response) => {
 
         if (responseSongById) {
             res.status(200).json(responseSongById);
-        } else {
+        } else { 
             res.status(404).send('The requested resource could not be found on the server.');
         }
 
-    } catch(error: any) {
+    } catch (error: any) {
         handleHttp(res, 'ERROR_GET_SONG:', error)
     }
 }
 
 
-const getItems = async (req:Request, res:Response) => {
+const getItems = async (req: Request, res: Response) => {
     try {
         if(req.query.songName){
-        const  songName  = req.query.songName as string;
+        const songName  = req.query.songName as string;
         const lowerCaseSongName:string = normalizeStringToLowerCase(songName);
         const responseSongName = await findSongs(lowerCaseSongName)
         
-        !responseSongName == null
+        !responseSongName
         ? res.status(404).send('The requested resource could not be found on the server.')
         : res.status(200).json({'message': responseSongName})
 
@@ -47,7 +45,10 @@ const getItems = async (req:Request, res:Response) => {
 const postItem= async ({ body }:Request, res:Response) => {
     try {
         const responseSong = await insertSong(body);
-        res.send(responseSong)
+        if(responseSong){
+            res.status(200).send('Song created successfully') 
+        }
+       
     } catch(error: any) {
         handleHttp(res, 'ERROR_POST_SONG', error)
     }
@@ -60,8 +61,8 @@ const updateItem = async ({params, body}: Request, res:Response) => {
         const responseUpdatSong = await updateSong(id, body) 
         
         responseUpdatSong
-        ? res.status(200).json(responseUpdatSong)
-        : res.status(404).send('the request is not found on the server and has not been updated.')
+        ? res.status(202).json({ message: 'Song updated successfully', song: responseUpdatSong })
+        : res.status(404).send('The requested resource was not found on the server and could not be updated.');
 
     } catch(error) {
         handleHttp(res, 'ERROR_UPDATE_SONG')
