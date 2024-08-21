@@ -1,5 +1,6 @@
     import Bands from "../models/band.model"
     import { Request, Response } from "express"
+    import { bandId } from "../services/band.service"
 
     const getBand = async(req:Request, res:Response) => {
         try {
@@ -30,4 +31,24 @@
         }
     }
 
-    export default {getBand}
+    const getItemById = async ({ params }: Request, res: Response) => {
+        try{
+            const { id } = params;
+             
+            const responseSongById = await bandId(id)
+    
+            if (responseSongById) {
+                res.status(200).json(responseSongById);
+            } else { 
+                res.status(404).send('The requested resource could not be found on the server.');
+            }
+    
+        } catch (error: any) {
+            res.status(500).json({
+                status: "failure",
+                message: "Error interno del servidor",
+            });
+        }
+    }
+
+    export default {getBand, getItemById}

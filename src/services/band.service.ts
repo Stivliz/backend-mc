@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import bcrypt from "bcrypt";
+import Bands from "../models/band.model";
 
 const DB = process.env.DB_URI || "";
 const mongoClient = new MongoClient(DB);
@@ -34,4 +35,11 @@ export async function authBand(bandname: string, password: string): Promise<any>
   } finally {
     mongoClient.close();
   }
+}
+
+export const bandId = async ( id: string ) => {
+
+  const searchBandId = await Bands.findOne({_id: id});
+  return searchBandId;
+
 }
