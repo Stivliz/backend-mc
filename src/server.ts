@@ -1,4 +1,5 @@
-require('dotenv/config');
+import 'dotenv/config'
+// require('dotenv/config');
 import app from './app'
 import dbConnect from './database';
 const PORT = process.env.PORT || 3001;
