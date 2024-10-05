@@ -1,35 +1,40 @@
 // import upload from "../services/multer.service";
 import { Request, Response } from "express";
 import { authBand } from "../services/band.service";
-import jwt, { Secret } from "jsonwebtoken"
+import jwt, { Secret } from "jsonwebtoken";
 
-const singUp = async(req:Request, res:Response) => {
-      const { bandname, password } = req.body;
-      const secret:Secret | undefined = process.env.SECRET
-    
-    if (secret === undefined) {
-      return res.status(500).send("Internal Server Error: Secret not defined");
-    }
+const singUp = async (req: Request, res: Response) => {
+  const { bandname, password } = req.body;
+  const secret: Secret | undefined = process.env.SECRET;
 
-    try {
-        const band = await authBand(bandname, password);
+  if (secret === undefined) {
+    return res.status(500).send("Internal Server Error: Secret not defined");
+  }
 
-        if(!band) return res.status(404).send("Band doesn't exist!")
-        const token = await jwt.sign({id:band._id}, secret)
-      
-        res.status(200).json({
-          message: "User logged in successfully!",
-          band,
-          token
-        });
-
-    } catch (error: unknown ) {
-        res.status(400).json({
-            status: "failure",
-            message: error,
-        });
-    }
-}
+  try {
+    const band = await authBand(bandname, password);
+    console.log("* Band ---> ", band.band_id);
+    if (!band) return res.status(404).send("Band doesn't exist!");
+    const token = jwt.sign(
+      {
+        sub: band.band_id.toString(), // Usando 'sub' para el ID del sujeto (banda)
+        bandname: band.bandname, // Opcional: incluir el nombre de la banda si lo necesitas
+      },
+      secret,
+    );
+    console.log("* Token.sub ---> ", token.sub);
+    res.status(200).json({
+      message: "User logged in successfully!",
+      band,
+      token,
+    });
+  } catch (error: unknown) {
+    res.status(400).json({
+      status: "failure",
+      message: error,
+    });
+  }
+};
 
 // const createBandController = async(req:Request, res:Response) => {
 //     try {
@@ -40,7 +45,7 @@ const singUp = async(req:Request, res:Response) => {
 //         }
 //         const { bandname, password } = req.body;
 //         const logoBand = req.file ? req.file.path : null;
-  
+
 //         await createBand({ bandname, password }, logoBand ?? '');
 //         return res.status(200).send("Banda creada exitosamente");
 //       });
@@ -50,5 +55,4 @@ const singUp = async(req:Request, res:Response) => {
 //     }
 // }
 
-
-export default { singUp}
+export default { singUp };
