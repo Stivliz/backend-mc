@@ -10,6 +10,7 @@ import {
   deleteAlbum,
 } from "../services/album.service";
 import ISong from "../interfaces/interfaces";
+import { storageImageCloudinary } from "../middlewares/multer";
 
 const getItemById = async ({ params }: Request, res: Response) => {
   try {
@@ -58,7 +59,7 @@ interface CustomRequest extends Request {
 
 const postItem = async (req: CustomRequest, res: Response) => {
   try {
-    const { songs, genre, year, ...albumData } = req.body;
+    const { songs, image, genre, year, ...albumData } = req.body;
 
     // Nos aseguramos de que req.decoded (Id de la Band extraida del token en el middleware)
     // está definido antes de acceder a sub.
@@ -77,6 +78,13 @@ const postItem = async (req: CustomRequest, res: Response) => {
         .send({ message: "Songs data is missing, not valid or empty" });
     }
 
+    if (!image) {
+      return res
+        .status(400)
+        .send({ message: "Image is missing, not valid or empty" });
+    }
+    const resultImage = await storageImageCloudinary(image);
+
     const yearNumber = typeof year === "string" ? parseInt(year, 10) : year;
 
     // Asegurarse de que genre sea un arreglo
@@ -86,6 +94,7 @@ const postItem = async (req: CustomRequest, res: Response) => {
       ...albumData,
       year: yearNumber, // Año como número
       genre: genreArray, // Género como array de strings
+      image: resultImage,
     };
 
     const albumCreated = await insertAlbum(completeAlbumData, songs, SubId);
