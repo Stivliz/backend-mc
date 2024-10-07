@@ -5,7 +5,7 @@ import { validateToken } from "../middlewares/validateToken";
 const router = Router();
 
 router
-  .get("/albums", albumControllers.getItems)
+  .get("/albums", validateToken, albumControllers.getItems)
   .get("/album/:id", albumControllers.getItemById)
   .post("/album", validateToken, albumControllers.postItem)
   .put("/album/:id", albumControllers.updateItem)

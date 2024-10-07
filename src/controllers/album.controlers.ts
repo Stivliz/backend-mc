@@ -12,6 +12,12 @@ import {
 import ISong from "../interfaces/interfaces";
 import { storageImageCloudinary } from "../middlewares/multer";
 
+interface CustomRequest extends Request {
+  decoded?: {
+    sub: string;
+  };
+}
+
 const getItemById = async ({ params }: Request, res: Response) => {
   try {
     const { id } = params;
@@ -28,14 +34,21 @@ const getItemById = async ({ params }: Request, res: Response) => {
   }
 };
 
-const getItems = async (req: Request, res: Response) => {
+const getItems = async (req: CustomRequest, res: Response) => {
   try {
+    if (!req.decoded || !req.decoded.sub) {
+      return res.status(400).send({ message: "Missing band ID in token" });
+    }
+
+    //Si esta definido entonces guardamos ese valor en SubId
+    const bandId = req.decoded.sub;
+
     if (req.query.albumName) {
       const albumName = req.query.albumName as string;
       const lowerCaseAlbumName = normalizeStringToLowerCase(albumName);
-      const responseAlbumName = await findAlbums(lowerCaseAlbumName);
+      const responseAlbumName = await findAlbums(lowerCaseAlbumName, bandId);
 
-      if (responseAlbumName) {
+      if (responseAlbumName.length > 0) {
         res.status(200).json({ message: responseAlbumName });
       } else {
         res.status(404).send({
@@ -43,19 +56,13 @@ const getItems = async (req: Request, res: Response) => {
         });
       }
     } else {
-      const allNameAlbum = await findAlbums("");
-      res.status(200).json({ message: allNameAlbum });
+      const allAlbums = await findAlbums("", bandId);
+      res.status(200).json({ message: allAlbums });
     }
   } catch (error: any) {
     handleHttp(res, "ERROR_GET_SONG:", error);
   }
 };
-
-interface CustomRequest extends Request {
-  decoded?: {
-    sub: string;
-  };
-}
 
 const postItem = async (req: CustomRequest, res: Response) => {
   try {

@@ -5,7 +5,7 @@ import { bandId } from "../services/band.service";
 const getBand = async (req: Request, res: Response) => {
   try {
     const bands = await Bands.find({});
-
+    console.log("* get bands -->", bands);
     if (!bands.length) return res.status(404).send("There are not bands");
 
     const band: Array<object> = [];
@@ -55,11 +55,9 @@ const searchBand = async (req: Request, res: Response) => {
   const { _id, bandname } = req.query as { _id?: string; bandname?: string };
 
   if (!_id && !bandname) {
-    return res
-      .status(400)
-      .json({
-        error: "Debes proporcionar un _id o un nombre de banda para buscar.",
-      });
+    return res.status(400).json({
+      error: "Debes proporcionar un _id o un nombre de banda para buscar.",
+    });
   }
 
   if (_id) {

@@ -77,16 +77,19 @@ export const findAlbumId = async (id: string) => {
   return searchResponseId;
 };
 
-export const findAlbums = async (name: string) => {
-  if (!name) {
-    const searchResponceAll = await AlbumModel.find({});
-    return searchResponceAll;
+export const findAlbums = async (name: string, bandId?: string) => {
+  let searchQuery: any = {};
+
+  if (name) {
+    searchQuery.name = createCaseInsensitiveRegex(name);
   }
 
-  const searchResponseName = await AlbumModel.findOne({
-    name: createCaseInsensitiveRegex(name),
-  });
-  return searchResponseName;
+  if (bandId) {
+    searchQuery.BandId = bandId;
+  }
+
+  const searchResponse = await AlbumModel.find(searchQuery);
+  return searchResponse;
 };
 
 export const updateAlbum = async (id: string, body: IAlbum) => {
