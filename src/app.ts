@@ -10,7 +10,8 @@ import bandRoute from "./routes/band.route";
 const app = express();
 
 //Middlewares
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));  // Aumenta el límite de tamaño para el JSON
+app.use(express.urlencoded({ limit: '50mb', extended: true })); // Aumenta el límite de tamaño para datos URL-encoded
 app.use(morgan("dev"));
 app.use(cors());
 
