@@ -21,6 +21,7 @@ export const insertAlbum = async (
     const songIds: mongoose.Types.ObjectId[] = [];
 
     // Usar map para manejar las operaciones asíncronas de manera paralela
+
     for (const song of songs) {
       // Verificar que la canción tenga un nombre válido
       if (!song.name || typeof song.name !== "string") {

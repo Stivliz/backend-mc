@@ -103,7 +103,7 @@ const postItem = async (req: CustomRequest, res: Response) => {
       genre: genreArray, // Género como array de strings
       image: resultImage,
     };
-
+    console.log('**completeAlbumData:', completeAlbumData)
     const albumCreated = await insertAlbum(completeAlbumData, songs, SubId);
     console.log("* AlbumCreated? --->", albumCreated);
     if (albumCreated) {
