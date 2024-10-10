@@ -44,5 +44,6 @@ export const bandId = async (id: string) => {
   const searchBandId = await Bands.findOne({ _id: id })
     .populate("albums")
     .exec();
+  console.log("**SearchBandId -->", searchBandId);
   return searchBandId;
 };
