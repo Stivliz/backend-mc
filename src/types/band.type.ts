@@ -12,4 +12,5 @@ export interface IBand {
   formedDate?: Date;
   socialLinks?: string[];
   albums: mongoose.Types.ObjectId;
+  songs: mongoose.Types.ObjectId;
 }
