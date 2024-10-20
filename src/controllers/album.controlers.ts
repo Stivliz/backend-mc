@@ -57,6 +57,7 @@ const getItems = async (req: CustomRequest, res: Response) => {
       }
     } else {
       const allAlbums = await findAlbums("", bandId);
+      console.log('*** allAlbums --->***', allAlbums)
       res.status(200).json({ message: allAlbums });
     }
   } catch (error: any) {

@@ -15,7 +15,10 @@ export default interface IAlbum {
   BandId: mongoose.Types.ObjectId;
   name: string;
   artist?: string;
-  songs: string[];
+  songs: {
+    songId: mongoose.Types.ObjectId;
+    name: string;
+  }[];
   image?: string;
   genre?: string[];
   year?: number;

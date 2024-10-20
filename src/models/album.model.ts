@@ -19,8 +19,11 @@ const albumSchema = new Schema<IAlbum>(
     },
     songs: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Songs",
+        songId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Songs",
+        },
+        name: String,
       },
     ],
     image: {
