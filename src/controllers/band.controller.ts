@@ -76,7 +76,7 @@ const searchBand = async (req: Request, res: Response) => {
   if (bandname) {
     try {
       const results = await Bands.find({
-        bandname: { $regex: new RegExp(bandname, "i") }, // Case-insensitive search
+        bandname: { $regex: new RegExp(bandname, "i") }, 
       });
       if (results.length === 0) {
         return res
@@ -93,4 +93,30 @@ const searchBand = async (req: Request, res: Response) => {
   return res.status(400).json({ error: "Petición incorrecta." });
 };
 
-export default { getBand, getItemById, searchBand };
+
+const updateDescription = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { description } = req.body;
+  console.log('dess',description);
+  console.log('id update', id);
+  
+  try {
+    const updatedBand = await Bands.findByIdAndUpdate(
+      id,
+      { description },
+      { new: true }
+    );
+    console.log('XDD',updatedBand);
+    
+
+    if (!updatedBand) {
+      return res.status(404).json({ message: "Banda no encontrada" });
+    }
+
+    res.status(200).json(updatedBand);
+  } catch (error:any) {
+    res.status(400).json({ error: error.message });
+  }
+}
+
+export default { getBand, getItemById, searchBand, updateDescription };

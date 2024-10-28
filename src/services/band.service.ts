@@ -34,6 +34,7 @@ export async function authBand(
       logoBand: band.logoBand,
       formedDate: band.formedDate,
       socialLinks: band.socialLinks,
+      description: band.description
     };
   } finally {
     mongoClient.close();

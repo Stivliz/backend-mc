@@ -5,6 +5,7 @@ const router = express.Router();
 router.route('/').get(bandController.getBand)
 router.route('/search').get(bandController.searchBand);
 router.route('/band/:id').get(bandController.getItemById)
+router.route('/:id/description').put(bandController.updateDescription)
 
-
+//seguir con el flujo de crear description
 export default router

@@ -10,6 +10,7 @@ const BandSchema = new Schema<IBand>(
     genre: { type: [String], required: true },
     // themes: { type: String, required: false },
     logoBand: { type: String },
+    description: { type: String },
     formedDate: { type: Date, required: true },
     albums: [
       {
