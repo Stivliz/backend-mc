@@ -30,6 +30,10 @@ const albumSchema = new Schema<IAlbum>(
       type: String,
       // required:true
     },
+    releaseType: {
+      type: String,
+      // required:true
+    },
     genre: {
       type: [String],
     },

@@ -23,6 +23,49 @@ export const insertSong = async (songData: ISong, SubId: string) => {
   }
 };
 
+/*
+export const insertSong = async (songData: ISong, SubId: string) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // Validación adicional de los datos
+    if (!songData.name || !songData.year) {
+      throw new Error("Missing required fields");
+    }
+    /*
+    if (!songData.name || !songData.duration || !songData.year) {
+      throw new Error("Missing required fields");
+      }*/
+// Creación del documento de la canción
+/*  const song = new SongModel({
+      ...songData,
+      BandId: SubId,
+      // Aseguramos que los tipos sean correctos
+      // duration: Number(songData.duration),
+      year: Number(songData.year),
+      genre: Array.isArray(songData.genre) ? songData.genre : [],
+    });
+
+    // Guardado con validación
+    const savedSong = await song.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return savedSong;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    // Mejorar el manejo de errores
+    if (error instanceof mongoose.Error.ValidationError) {
+      throw new Error(`Validation error: ${error.message}`);
+    }
+    throw error;
+  }
+}; */
+
 export const findSongId = async (id: string) => {
   const searchResponseId = await SongModel.findOne({ _id: id });
   return searchResponseId;

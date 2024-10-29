@@ -94,6 +94,81 @@ const postItem = async (req: CustomRequest, res: Response) => {
   }
 };
 
+
+
+/*const postItem = async (req: CustomRequest, res: Response) => {
+  try {
+    const { name, image, year, genre, artist, ...songData } = req.body;
+
+    // Validación del token y BandId
+    if (!req.decoded?.sub) {
+      return res.status(400).send({ message: "Missing band ID in token" });
+    }
+    const bandId = req.decoded.sub;
+
+    // Validaciones básicas
+    if (!name) {
+      return res.status(400).send({ message: "Song name is required" });
+    }
+
+    if (!image) {
+      return res.status(400).send({ message: "Image is required" });
+    }
+
+    // Validación de duración
+    /*const durationNum = Number(duration);
+    if (!durationNum || durationNum <= 0 || !Number.isInteger(durationNum)) {
+      return res.status(400).send({ message: "Invalid duration" });
+      }*/
+
+    // Procesamiento de la imagen
+    /*
+    const resultImage = await storageImageCloudinary(image);
+
+    // Procesamiento del año
+    const yearNumber = typeof year === "string" ? parseInt(year, 10) : year;
+    if (
+      isNaN(yearNumber) ||
+      yearNumber < 1900 ||
+      yearNumber > new Date().getFullYear() + 1
+    ) {
+      return res.status(400).send({ message: "Invalid year" });
+    }
+
+    // Procesamiento del género
+    const genreArray = Array.isArray(genre) ? genre : genre ? [genre] : [];
+
+    // Construcción del objeto de canción
+    const completeSongData = {
+      name,
+      artist: artist || "",
+      //duration: durationNum,
+      image: resultImage,
+      year: yearNumber,
+      genre: genreArray,
+      ...songData,
+    };
+
+    // Inserción en la base de datos
+    const responseSong = await insertSong(completeSongData, bandId);
+
+    if (responseSong) {
+      res.status(201).send({
+        status: true,
+        message: "Song created successfully",
+        data: { id: responseSong._id },
+      });
+    } else {
+      res.status(400).send({
+        status: false,
+        message: "Failed to create song",
+      });
+    }
+  } catch (error: any) {
+    handleHttp(res, "ERROR_POST_SONG", error);
+  }
+}; */
+
 const updateItem = async ({ params, body }: Request, res: Response) => {
   try {
     const { id } = params;
