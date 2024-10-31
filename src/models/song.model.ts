@@ -7,12 +7,11 @@ const songSchema = new Schema<ISong>(
     BandId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "band",
-      required: true,
     },
     name: {
       type: String,
       required: true,
-      index: true,
+      unique: true,
     },
     artist: {
       type: String,
