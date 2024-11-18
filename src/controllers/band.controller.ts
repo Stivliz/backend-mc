@@ -1,6 +1,6 @@
 import Bands from "../models/band.model";
 import { Request, Response } from "express";
-import { bandId } from "../services/band.service";
+import { bandId, getBandDescriptionById } from "../services/band.service";
 
 const getBand = async (req: Request, res: Response) => {
   try {
@@ -97,17 +97,13 @@ const searchBand = async (req: Request, res: Response) => {
 const updateDescription = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { description } = req.body;
-  console.log('dess',description);
-  console.log('id update', id);
-  
+ 
   try {
     const updatedBand = await Bands.findByIdAndUpdate(
       id,
       { description },
       { new: true }
     );
-    console.log('XDD',updatedBand);
-    
 
     if (!updatedBand) {
       return res.status(404).json({ message: "Banda no encontrada" });
@@ -119,4 +115,21 @@ const updateDescription = async (req: Request, res: Response) => {
   }
 }
 
-export default { getBand, getItemById, searchBand, updateDescription };
+const descriptionById = async (req:Request, res:Response) => {
+  const { id } = req.params;
+
+  try {
+    const description = await getBandDescriptionById(id);
+    console.log(description);
+    
+    if (!description) {
+      return res.status(404).json({ message: "Banda no encontrada" });
+    }
+
+    res.status(200).json({ description });
+  } catch (error:any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export default { getBand, getItemById, searchBand, updateDescription, descriptionById };

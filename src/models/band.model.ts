@@ -18,6 +18,12 @@ const BandSchema = new Schema<IBand>(
         ref: "Albums", // Hace referencia al modelo Albums
       },
     ],
+    songs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Songs", // Hace referencia al modelo Albums
+      },
+    ],
   },
   {
     timestamps: true,

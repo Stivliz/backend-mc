@@ -18,55 +18,74 @@ export const insertAlbum = async (
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    const songIds: mongoose.Types.ObjectId[] = [];
-
-    // Usar map para manejar las operaciones asíncronas de manera paralela
+    const songDocuments = [];
 
     for (const song of songs) {
-      // Verificar que la canción tenga un nombre válido
       if (!song.name || typeof song.name !== "string") {
         throw new Error("Cada canción debe tener un nombre válido y no vacío.");
       }
 
       const normalizedSongName = normalizeStringToLowerCase(song.name);
+
+      let songDocument;
       const existingSong = await SongModel.findOne({
         name: normalizedSongName,
-      }).session(session); // Asegúrate de usar la sesión
+      }).session(session);
 
       if (existingSong) {
-        songIds.push(existingSong._id);
+        console.log("Canción existente:", existingSong._id.toString());
+        songDocument = existingSong;
       } else {
-        const createdSong = await SongModel.create([{ name: song.name }], {
-          session, // Asegúrate de usar la sesión aquí también
-        });
-        songIds.push(createdSong[0]._id);
+        const [createdSong] = await SongModel.create(
+          [
+            {
+              name: song.name,
+              BandId: SubId, // Añadimos la referencia a la banda
+            },
+          ],
+          {
+            session,
+          },
+        );
+        console.log("Nueva canción creada:", createdSong._id.toString());
+        songDocument = createdSong;
       }
+
+      // Guardamos la estructura correcta con songId y name
+      songDocuments.push({
+        songId: songDocument._id,
+        name: songDocument.name,
+      });
     }
 
-    // Crear el álbum y asignar las canciones creadas
+    // Crear el álbum con la estructura correcta de songs
     const album = new AlbumModel({
       ...albumData,
-      songs: songIds, // Asigna las canciones creadas
-      BandId: SubId, // Id de la banda
+      songs: songDocuments, // Ahora guardamos el array de objetos con songId y name
+      BandId: SubId,
     });
 
-    const savedAlbum = await album.save({ session }); // Asegurarte de usar la sesión aquí
+    const savedAlbum = await album.save({ session });
 
+    // Actualizar todas las canciones con la referencia al álbum
+    await SongModel.updateMany(
+      { _id: { $in: songDocuments.map((song) => song.songId) } },
+      { $set: { album: savedAlbum._id } },
+      { session },
+    );
+
+    // Actualizar la banda
     await Bands.findByIdAndUpdate(
       SubId,
-      {
-        $push: { albums: savedAlbum._id },
-      },
+      { $push: { albums: savedAlbum._id } },
       { session },
-    ); // Asegúrate de usar la sesión aquí también
+    );
 
-    // Commit de la transacción
     await session.commitTransaction();
     session.endSession();
 
     return savedAlbum;
   } catch (error) {
-    // Abortamos la transacción si algo falla
     await session.abortTransaction();
     session.endSession();
     throw error;
@@ -79,18 +98,48 @@ export const findAlbumId = async (id: string) => {
 };
 
 export const findAlbums = async (name: string, bandId?: string) => {
-  let searchQuery: any = {};
+  try {
+    let searchQuery: any = {};
 
-  if (name) {
-    searchQuery.name = createCaseInsensitiveRegex(name);
+    if (name) {
+      searchQuery.name = createCaseInsensitiveRegex(name);
+    }
+
+    if (bandId) {
+      searchQuery.BandId = bandId;
+    }
+
+    // Obtener los álbumes con populate correcto
+    const searchResponse = await AlbumModel.find(searchQuery)
+      .populate({
+        path: "songs.songId", // Cambiado de 'songs' a 'songs.songId'
+        model: "Songs",
+        select: "name",
+      })
+      .lean()
+      .exec();
+
+    // Formatear la respuesta para que sea más limpia
+    const formattedResponse = searchResponse.map((album) => ({
+      ...album,
+      songs: album.songs
+        .map((song) => ({
+          id: song.songId?._id || song.songId,
+          name: song.name,
+        }))
+        .filter((song) => song.name), // Filtrar canciones sin nombre
+    }));
+
+    console.log(
+      "Álbumes encontrados (formateados):",
+      JSON.stringify(formattedResponse, null, 2),
+    );
+
+    return formattedResponse;
+  } catch (error) {
+    console.error("Error al buscar álbumes:", error);
+    throw error;
   }
-
-  if (bandId) {
-    searchQuery.BandId = bandId;
-  }
-
-  const searchResponse = await AlbumModel.find(searchQuery);
-  return searchResponse;
 };
 
 export const updateAlbum = async (id: string, body: IAlbum) => {

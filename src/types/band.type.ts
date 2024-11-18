@@ -13,4 +13,5 @@ export interface IBand {
   socialLinks?: string[];
   albums: mongoose.Types.ObjectId;
   description?: string;
+  songs: mongoose.Types.ObjectId;
 }

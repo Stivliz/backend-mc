@@ -45,5 +45,15 @@ export const bandId = async (id: string) => {
   const searchBandId = await Bands.findOne({ _id: id })
     .populate("albums")
     .exec();
+  console.log("**SearchBandId -->", searchBandId);
   return searchBandId;
+};
+
+export const getBandDescriptionById = async (bandId:string) => {
+  try {
+    const band = await Bands.findById(bandId, "description");
+    return band ? band.description : null;
+  } catch (error) {
+    throw new Error("Error al obtener la descripción de la banda");
+  }
 };

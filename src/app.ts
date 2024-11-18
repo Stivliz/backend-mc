@@ -10,14 +10,14 @@ import bandRoute from "./routes/band.route";
 const app = express();
 
 //Middlewares
-app.use(express.json({ limit: '50mb' }));  // Aumenta el límite de tamaño para el JSON
-app.use(express.urlencoded({ limit: '50mb', extended: true })); // Aumenta el límite de tamaño para datos URL-encoded
+app.use(express.json({ limit: "50mb" })); // Aumenta el límite de tamaño para el JSON
+app.use(express.urlencoded({ limit: "50mb", extended: true })); // Aumenta el límite de tamaño para datos URL-encoded
 app.use(morgan("dev"));
 app.use(cors());
 
 //Routes
-app.use("/", songs);
-app.use("/", albums);
+app.use("/api/v1", songs);
+app.use("/api/v1", albums);
 
 //Routes
 app.use("/api/v1/bands", bandRoute);

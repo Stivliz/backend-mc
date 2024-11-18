@@ -1,42 +1,45 @@
-import mongoose from 'mongoose';
-const {Schema, model } = mongoose;
-import ISong from '../interfaces/interfaces';
+import mongoose from "mongoose";
+const { Schema, model } = mongoose;
+import ISong from "../interfaces/interfaces";
 
-
-const songSchema = new Schema <ISong>(
-    {
-        name: {
-            type: String,
-            required: true,
-            index: true // Añadimos el índice aquí
-        },
-        artist: {
-            type: String,
-            // // required: true
-        },
-        album: {
-            type:  mongoose.Schema.Types.ObjectId, 
-            ref: 'Albums',
-        },
-        image: {
-            type: String,
-            // required:true
-        },
-        genre: {
-            type: String,
-            // required: true
-        },
-        year: {
-            type: Number,
-            // required: true
-        }
-    }, 
-    {
+const songSchema = new Schema<ISong>(
+  {
+    BandId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "band",
+    },
+    name: {
+      type: String,
+      required: true,
+      index: true, // Añadimos el índice aquí
+    },
+    artist: {
+      type: String,
+      // // required: true
+    },
+    album: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Albums",
+    },
+    image: {
+      type: String,
+      // required:true
+    },
+    genre: {
+      type: String,
+      // required: true
+    },
+    year: {
+      type: Number,
+      // required: true
+    },
+  },
+  {
     timestamps: true,
     versionKey: false,
-    }
-)
+  },
+);
 
-const SongModel = model('Songs', songSchema);
+const SongModel = model("Songs", songSchema);
 
 export default SongModel;

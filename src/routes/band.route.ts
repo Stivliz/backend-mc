@@ -6,6 +6,6 @@ router.route('/').get(bandController.getBand)
 router.route('/search').get(bandController.searchBand);
 router.route('/band/:id').get(bandController.getItemById)
 router.route('/:id/description').put(bandController.updateDescription)
+router.route('/:id/descriptionid').get(bandController.descriptionById)
 
-//seguir con el flujo de crear description
 export default router
