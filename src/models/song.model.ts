@@ -11,27 +11,39 @@ const songSchema = new Schema<ISong>(
     name: {
       type: String,
       required: true,
-      index: true, // Añadimos el índice aquí
+      unique: true,
     },
     artist: {
       type: String,
-      // // required: true
+      required: false,
     },
+    /*duration: {
+      type: Number,
+      required: true,
+      min: [1, "Duration must be at least 1 second"],
+      validate: {
+        validator: Number.isInteger,
+        message: "Duration must be an integer",
+      },
+      },*/
     album: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Albums",
+      required: false,
     },
     image: {
       type: String,
-      // required:true
     },
     genre: {
-      type: String,
-      // required: true
+      type: [String], // Cambiado a array de strings
+      required: false,
+      default: [],
     },
     year: {
       type: Number,
-      // required: true
+      /*required: true,
+      min: 1900,
+      max: new Date().getFullYear() + 1,*/
     },
   },
   {
@@ -41,5 +53,4 @@ const songSchema = new Schema<ISong>(
 );
 
 const SongModel = model("Songs", songSchema);
-
 export default SongModel;

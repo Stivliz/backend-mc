@@ -43,8 +43,16 @@ export async function authBand(
 
 export const bandId = async (id: string) => {
   const searchBandId = await Bands.findOne({ _id: id })
-    .populate("albums")
+    .populate({
+      path: "albums", // Popula los álbumes
+      populate: {
+        path: "songs.songId", // Popula las canciones dentro de cada álbum
+        model: "Songs",
+      },
+    })
+    .populate("songs") // Popula el array de canciones referenciadas directamente en el modelo de la banda
     .exec();
+
   console.log("**SearchBandId -->", searchBandId);
   return searchBandId;
 };

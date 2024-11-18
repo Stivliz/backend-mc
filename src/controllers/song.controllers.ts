@@ -34,12 +34,37 @@ const getItemById = async ({ params }: Request, res: Response) => {
   }
 };
 
-const getItems = async (req: Request, res: Response) => {
+const getItems = async (req: CustomRequest, res: Response) => {
   try {
+    if (!req.decoded || !req.decoded.sub) {
+      return res.status(400).send({ message: "Missing band ID in token" });
+    }
+
+    const bandId = req.decoded.sub;
+
+    const songs = await findSongs(undefined, bandId);
+
+    // Devolver un 200 con un array vacío si no hay canciones
+    res.status(200).json({ message: songs });
+  } catch (error: any) {
+    handleHttp(res, "ERROR_GET_SONGS", error);
+  }
+};
+
+/*
+const getItems = async (req: CustomRequest, res: Response) => {
+  try {
+    if (!req.decoded || !req.decoded.sub) {
+      return res.status(400).send({ message: "Missing band ID in token" });
+    }
+
+    //Si esta definido entonces guardamos ese valor en SubId
+    const bandId = req.decoded.sub;
+
     if (req.query.songName) {
       const songName = req.query.songName as string;
       const lowerCaseSongName: string = normalizeStringToLowerCase(songName);
-      const responseSongName = await findSongs(lowerCaseSongName);
+      const responseSongName = await findSongs(lowerCaseSongName, bandId);
 
       !responseSongName
         ? res
@@ -54,7 +79,7 @@ const getItems = async (req: Request, res: Response) => {
     handleHttp(res, "ERROR_GET_SONG", error);
   }
 };
-
+*/
 const postItem = async (req: CustomRequest, res: Response) => {
   try {
     const { name, image, year, genre, ...songData } = req.body;
@@ -62,8 +87,9 @@ const postItem = async (req: CustomRequest, res: Response) => {
       return res.status(400).send({ message: "Missing band ID in token" });
     }
 
-    const bandId = req.decoded.sub;
+    const SubId = req.decoded.sub;
 
+    console.log("SUBID -->", SubId);
     if (!image) {
       return res
         .status(400)
@@ -83,7 +109,7 @@ const postItem = async (req: CustomRequest, res: Response) => {
       image: resultImage,
     };
 
-    const responseSong = await insertSong(completeSongData, bandId);
+    const responseSong = await insertSong(completeSongData, SubId);
     if (responseSong) {
       res.status(200).send({ message: "The song was created" });
     } else {
@@ -93,6 +119,79 @@ const postItem = async (req: CustomRequest, res: Response) => {
     handleHttp(res, "ERROR_POST_SONG", error);
   }
 };
+
+/*const postItem = async (req: CustomRequest, res: Response) => {
+  try {
+    const { name, image, year, genre, artist, ...songData } = req.body;
+
+    // Validación del token y BandId
+    if (!req.decoded?.sub) {
+      return res.status(400).send({ message: "Missing band ID in token" });
+    }
+    const bandId = req.decoded.sub;
+
+    // Validaciones básicas
+    if (!name) {
+      return res.status(400).send({ message: "Song name is required" });
+    }
+
+    if (!image) {
+      return res.status(400).send({ message: "Image is required" });
+    }
+
+    // Validación de duración
+    /*const durationNum = Number(duration);
+    if (!durationNum || durationNum <= 0 || !Number.isInteger(durationNum)) {
+      return res.status(400).send({ message: "Invalid duration" });
+      }*/
+
+// Procesamiento de la imagen
+/*
+    const resultImage = await storageImageCloudinary(image);
+
+    // Procesamiento del año
+    const yearNumber = typeof year === "string" ? parseInt(year, 10) : year;
+    if (
+      isNaN(yearNumber) ||
+      yearNumber < 1900 ||
+      yearNumber > new Date().getFullYear() + 1
+    ) {
+      return res.status(400).send({ message: "Invalid year" });
+    }
+
+    // Procesamiento del género
+    const genreArray = Array.isArray(genre) ? genre : genre ? [genre] : [];
+
+    // Construcción del objeto de canción
+    const completeSongData = {
+      name,
+      artist: artist || "",
+      //duration: durationNum,
+      image: resultImage,
+      year: yearNumber,
+      genre: genreArray,
+      ...songData,
+    };
+
+    // Inserción en la base de datos
+    const responseSong = await insertSong(completeSongData, bandId);
+
+    if (responseSong) {
+      res.status(201).send({
+        status: true,
+        message: "Song created successfully",
+        data: { id: responseSong._id },
+      });
+    } else {
+      res.status(400).send({
+        status: false,
+        message: "Failed to create song",
+      });
+    }
+  } catch (error: any) {
+    handleHttp(res, "ERROR_POST_SONG", error);
+  }
+}; */
 
 const updateItem = async ({ params, body }: Request, res: Response) => {
   try {
