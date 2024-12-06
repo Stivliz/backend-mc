@@ -6,6 +6,7 @@ import albums from "./routes/album.route";
 import authRout from "./routes/auth.route";
 import authRoutPost from "./routes/authPost.route";
 import bandRoute from "./routes/band.route";
+import newsRoutes from "./routes/news.route";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/v1", albums);
 
 //Routes
 app.use("/api/v1/bands", bandRoute);
+app.use("/api/v1/news", newsRoutes);
 
 app.use("/api/v1/login/login", authRout);
 app.use("/api/v1/login/register", authRoutPost);

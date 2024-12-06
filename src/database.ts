@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import mongoose from "mongoose"
+import {scheduleScraping } from './services/scheduler.service'
 
 const DB = process.env.DB_URI || ""
 
@@ -13,6 +14,7 @@ const db = () => {
           })
             .then(() => {
               console.log('Connection success');
+              scheduleScraping();
             })
             .catch(error => {
               console.error('Connection fail', error);

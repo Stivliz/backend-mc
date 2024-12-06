@@ -59,7 +59,7 @@ const searchBand = async (req: Request, res: Response) => {
       error: "Debes proporcionar un _id o un nombre de banda para buscar.",
     });
   }
-
+ 
   if (_id) {
     try {
       const item = await Bands.findById(_id);
