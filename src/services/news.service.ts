@@ -38,7 +38,15 @@ export class NewsService {
         const title = $(div).find("h4").text().trim();
         const description = $(div).find("p").text().trim();
         const link = $(div).find("a").attr("href");
-        const img = $(div).find("img").attr("src");
+        // const img = $(div).find("img").attr("src");
+
+        const img =
+        $(div).find("img").attr("nitro-lazy-src") || 
+        $(div).find("img").attr("src") ||           
+        "";
+
+        console.log("img",img);
+        
 
         if (title && link) {
           newsList.push({ title, description, link, img });
