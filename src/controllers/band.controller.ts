@@ -14,7 +14,7 @@ const getBand = async (req: Request, res: Response) => {
       band.push({
         _id: e._id,
         bandname: e.bandname,
-        genre: e.genre,
+        genre: e.genre.flatMap((g) => g.split(',').map((item) => item.trim())),
         // themes: e.themes,
         logoBand: e.logoBand,
         formedDate: e.formedDate,
