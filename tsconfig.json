@@ -8,8 +8,8 @@
     "strict": true,
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./types"],
-    "types": ["node"]
+    "types": ["node", "jest"]
   },
-  "include": ["src"],
+  "include": ["src", "tests"],
   "exclude": ["node_modules"]
 }

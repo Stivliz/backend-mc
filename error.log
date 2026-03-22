@@ -1,0 +1,33 @@
+FAIL tests/app.test.ts
+  ÔùÅ Test suite failed to run
+
+    tests/app.test.ts:4:1 - error TS2593: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+
+    4 describe("App Security and Setup", () => {
+      ~~~~~~~~
+    tests/app.test.ts:5:3 - error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+
+    5   it("should have Security Headers (Helmet)", async () => {
+        ~~
+    tests/app.test.ts:7:5 - error TS2304: Cannot find name 'expect'.
+
+    7     expect(res.headers["x-powered-by"]).toBeUndefined();
+          ~~~~~~
+    tests/app.test.ts:8:5 - error TS2304: Cannot find name 'expect'.
+
+    8     expect(res.headers["x-xss-protection"]).toBeDefined();
+          ~~~~~~
+    tests/app.test.ts:11:3 - error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+
+    11   it("should apply rate limiter on auth routes", async () => {
+         ~~
+    tests/app.test.ts:14:5 - error TS2304: Cannot find name 'expect'.
+
+    14     expect(res.status).not.toBe(429);
+           ~~~~~~
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        4.051 s
+Ran all test suites.
